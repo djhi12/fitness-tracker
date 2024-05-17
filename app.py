@@ -1,12 +1,26 @@
-from flask import Flask, render_template
+import pandas as pd
+import matplotlib.pyplot as plt
 
-app = Flask(__name__)
+# Read the CSV file
+data = pd.read_csv('fitness-data.csv')
 
+# Display the first few rows of the DataFrame
+print(data.head())
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# Extract data
+x = data['x']
+y = data['y']
 
+# Create a plot
+plt.plot(x, y, marker='o', linestyle='--', color='r')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# Add a title
+plt.title('Line Plot from CSV Data')
+
+# Add x and y labels
+plt.xlabel('X Axis')
+plt.ylabel('Y Axis')
+
+# Show the plot
+plt.grid(True)
+plt.show()
