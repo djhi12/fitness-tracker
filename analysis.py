@@ -1,8 +1,79 @@
 import matplotlib.pyplot as plt
+import itertools
+import os
+
+
+def read_fitness_data(filename):
+    """
+    Read fitness data from a CSV file.
+
+    Args:
+    - filename: Name of the CSV file
+
+    Returns:
+    - List of tuples containing fitness data
+    """
+    fitness_data = []
+    with open(filename) as f:
+        next(f)  # Skip header row
+        for line in f:
+            fitness_data.append(tuple(line.strip().split(",")))
+    return fitness_data
+
+
+def plot_fitness_data(category, fitness_data):
+    """
+    Plot fitness data for a specific category.
+
+    Args:
+    - category: Category to plot
+    - fitness_data: List of tuples containing fitness data
+    """
+    colors = itertools.cycle(['r', 'g', 'b', 'c', 'm', 'y', 'k'])
+    found = False
+
+    for data in fitness_data:
+        date_fitness, exercise, category_type, weight, reps, serie_load, week_of_year, week = data
+
+        if category_type.lower() == category.lower():
+            found = True
+            color = next(colors)  # Get the next color
+
+            # Sample data
+            x_axis = ["Weight", "Reps", "Serie Load", "Week of Year"]
+            y_axis = [float(weight), int(reps), float(
+                serie_load), int(week_of_year)]
+
+            # Create a plot
+            plt.plot(x_axis, y_axis, marker='o', linestyle='-', color=color)
+
+            # Add a title
+            plt.title('Fitness Tracker')
+
+            # Add x and y labels
+            plt.xlabel(f"Category: {category_type} | Exercise: {exercise}")
+            plt.ylabel(f"Values on {date_fitness}")
+
+            # Adding grid
+            plt.grid(True)
+
+            plt.show()
+
+    if not found:
+        print(f"No data found for the category: {category}.")
 
 
 def main():
+    print("Welcome to Fitness Tracker!\n")
     print("Categories:\nBack\nBiceps\nChest\nLegs\nShoulders\nTriceps\n")
+
+    # Read data from CSV file
+    fitness_data_file = 'fitness-data.csv'
+    if not os.path.exists(fitness_data_file):
+        print(f"Error: File '{fitness_data_file}' not found.")
+        return
+
+    fitness_data = read_fitness_data(fitness_data_file)
 
     while True:  # Infinite loop until user exits
         category = input("Choose category (or 'exit' to quit): ")
@@ -10,55 +81,10 @@ def main():
         if category.lower() == "exit":
             break  # Exit the loop if user enters 'exit'
 
-        # Read data from CSV file
-        fitness_data = 'fitness-data.csv'
+        plot_fitness_data(category, fitness_data)
 
-        with open(fitness_data) as f:
-            i = 0
-            for line in f:
-                i += 1
-                fitness_details = line.strip()
-                fitness_data_clean = fitness_details.split(",")
-
-                # Skip the header row
-                if i == 1:
-                    continue
-
-                # Assigning the data from the file
-                date_fitness = fitness_data_clean[0]
-                exercise = fitness_data_clean[1]
-                category_type = fitness_data_clean[2]
-                weight = fitness_data_clean[3]
-                reps = fitness_data_clean[4]
-                serie_load = fitness_data_clean[5]
-                week_of_year = fitness_data_clean[6]
-                week = fitness_data_clean[7]
-
-                if category_type.lower() == category.lower():
-                    # Sample data
-                    x_axis = ["Weight", "Reps", "Serie Load", "Week of Year"]
-                    y_axis = [float(weight), int(reps), float(
-                        serie_load), int(week_of_year)]
-
-                    # Create a plot
-                    plt.plot(x_axis, y_axis)
-
-                    # Add a title
-                    plt.title('Fitness Tracker')
-
-                    # Add x and y labels
-                    plt.xlabel(
-                        f"Category: {category_type} | Exercise: {exercise}")
-                    # plt.ylabel(f"Values on {date_fitness}")
-
-                    # Adding grid
-                    plt.plot(x_axis, y_axis, marker='o',
-                             linestyle='-', color='r')
-                    plt.grid(True)
-
-                    plt.show()
-
-        print("Success! (View another category or exit)")
+    print("Exiting Fitness Tracker. Goodbye!")
 
 
-main()
+if __name__ == "__main__":
+    main()
