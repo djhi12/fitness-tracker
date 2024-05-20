@@ -42,7 +42,7 @@ The script generates line plots for each exercise within the selected category, 
 
 ## Video Demonstration
 
-[Web Site Name](http://url.link.goes.here)
+[Fitness Tracker](https://youtu.be/BJ4alyXZo7c)
 
 ## Additional Information
 
